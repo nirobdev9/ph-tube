@@ -13,7 +13,13 @@ const loadVideoByCategories = (id) =>{
     
     const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`;
     console.log(url)
-    fetch(url).then((res) => res.json()).then((data)=> displayVideo(data.category))
+    fetch(url).then((res) => res.json()).then((data)=> {
+      const buttonClicked = document.getElementById(`btn-${id}`)
+      buttonClicked.classList.add("active")
+      console.log(buttonClicked)
+      displayVideo(data.category)
+
+    })
 }
  
 function displayCategories(categories) {
@@ -25,7 +31,7 @@ function displayCategories(categories) {
     // create new element
     const btnContainerDiv = document.createElement("div");
     btnContainerDiv.innerHTML = `
-    <button onclick="loadVideoByCategories(${cat.category_id})" class="btn hover:bg-[#FF1F3D] hover:text-white"> ${cat.category}</button>
+    <button id="btn-${cat.category_id}" onclick="loadVideoByCategories(${cat.category_id})" class="btn hover:bg-[#FF1F3D] hover:text-white"> ${cat.category}</button>
     `;
     // append
     buttonContainer.append(btnContainerDiv);
@@ -35,6 +41,16 @@ function displayCategories(categories) {
 const displayVideo = (videos) => {
   const videoContainer = document.getElementById("videos-container");
   videoContainer.innerHTML = "";
+  if(videos.length == 0){
+    videoContainer.innerHTML = `
+    <div class="col-span-full flex flex-col justify-center items-center text-center py-20">
+            <img class="w-[150px]" src="./assets/Icon.png" alt="">
+            <h2 class="text-2xl font-bold">oops ! There is no content here</h2>
+        </div>
+      
+    `
+    return;
+  }
   videos.forEach((video) => {
     console.log(video);
     const videoDiv = document.createElement("div");
